@@ -1,7 +1,4 @@
-// UserProfile.js
-
 import React, { useState, useEffect } from "react";
-import api from "../../services/api";
 import "./UserProfile.css"; // Import CSS file for styling
 
 const UserProfile = () => {
@@ -13,15 +10,23 @@ const UserProfile = () => {
     const fetchUserProfile = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await api.get("/profile", {
+        console.log("Token:", token);
+        const response = await fetch("/api/profile", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-        setUserData(response.data);
+        if (response.ok) {
+          const data = await response.json();
+          setUserData(data);
+        } else {
+          const errorMessage = await response.text();
+          console.error("Error fetching user profile:", errorMessage);
+          setError(errorMessage);
+        }
       } catch (error) {
-        console.error("Error fetching user profile:", error.response.data);
-        setError(error.response.data);
+        console.error("Error fetching user profile:", error.message);
+        setError(error.message);
       }
     };
 

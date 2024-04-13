@@ -1,28 +1,30 @@
 import React from "react";
-import {
-  Route,
-  createRoutesFromElements,
-  RouterProvider,
-  createBrowserRouter,
-} from "react-router-dom";
-import PrivateRoute from "./components/common/PrivateRoute";
-import UserProfile from "./components/Profile/UserProfile";
-import LoginForm from "./components/Auth/LoginForm";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-const router = createBrowserRouter(
-  createRoutesFromElements(
-    <Route path="/">
-      <Route index element={<LoginForm />} />
-      <Route
-        path="/profile"
-        element={<PrivateRoute component={UserProfile} />}
-      />
-    </Route>
-  )
-);
+import LoginForm from "./components/Auth/LoginForm";
+import UserProfile from "./components/Profile/UserProfile";
+import PrivateRoute from "./components/common/PrivateRoute";
+import RegisterForm from "./components/Auth/RegisterForm";
 
 const App = () => {
-  return <RouterProvider router={router} />;
+  return (
+    <Router>
+      <div>
+        <Routes>
+          <Route path="/register" element={<RegisterForm />} />
+          <Route path="/" element={<LoginForm />} />
+          <Route
+            path="/profile"
+            element={
+              <PrivateRoute component={UserProfile}>
+                <Route path="/" element={<UserProfile />} />
+              </PrivateRoute>
+            }
+          />
+        </Routes>
+      </div>
+    </Router>
+  );
 };
 
 export default App;

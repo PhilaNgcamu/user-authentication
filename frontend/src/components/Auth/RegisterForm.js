@@ -1,7 +1,4 @@
-// RegisterForm.js
-
 import React, { useState } from "react";
-import axios from "../services/api";
 import "./RegisterForm.css"; // Import CSS file for styling
 
 const RegisterForm = () => {
@@ -13,19 +10,28 @@ const RegisterForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("/register", {
-        username,
-        email,
-        password,
+      const response = await fetch("/api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, email, password }),
       });
-      console.log(response.data); // Log the response from the server
-      // Reset the form fields after successful registration
-      setUsername("");
-      setEmail("");
-      setPassword("");
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data); // Log the response from the server
+        // Reset the form fields after successful registration
+        setUsername("");
+        setEmail("");
+        setPassword("");
+      } else {
+        const errorMessage = await response.text();
+        console.error("Error registering user:", errorMessage);
+        setError(errorMessage);
+      }
     } catch (error) {
-      console.error("Error registering user:", error.response.data);
-      setError(error.response.data);
+      console.error("Error registering user:", error.message);
+      setError(error.message);
     }
   };
 

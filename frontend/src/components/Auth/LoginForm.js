@@ -1,7 +1,4 @@
-// LoginForm.js
-
 import React, { useState } from "react";
-import axios from "../../services/api";
 import "./LoginForm.css"; // Import CSS file for styling
 
 const LoginForm = () => {
@@ -12,16 +9,29 @@ const LoginForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("/login", { username, password });
-      // Assuming the backend sends back a token upon successful login
-      const { token } = response.data;
-      // Store token in localStorage
-      localStorage.setItem("token", token);
-      // Redirect to profile page or perform any other action
-      console.log("Login successful");
+      const response = await fetch("/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      });
+      if (response.ok) {
+        const data = await response.json();
+        // Assuming the backend sends back a token upon successful login
+        const { token } = data;
+        // Store token in localStorage
+        localStorage.setItem("token", token);
+        // Redirect to profile page or perform any other action
+        console.log("Login successful");
+      } else {
+        const errorMessage = await response.text();
+        console.error("Error logging in:", errorMessage);
+        setError(errorMessage);
+      }
     } catch (error) {
-      console.error("Error logging in:", error.response.data);
-      setError(error.response.data);
+      console.error("Error logging in:", error.message);
+      setError(error.message);
     }
   };
 
