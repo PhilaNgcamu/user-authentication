@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { Navigate } from "react-router-dom"; // Import Navigate component
+import { Navigate } from "react-router-dom";
 import "./LoginForm.css";
 
 const LoginForm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [loggedIn, setLoggedIn] = useState(false); // State to track login status
+  const [loggedIn, setLoggedIn] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,7 +22,7 @@ const LoginForm = () => {
       if (response.ok) {
         localStorage.setItem("token", data.token);
         console.log("Login successful");
-        setLoggedIn(true); // Set loggedIn state to true after successful login
+        setLoggedIn(true);
       } else {
         setError(data.error);
       }
@@ -57,7 +57,7 @@ const LoginForm = () => {
         </div>
         <button type="submit">Login</button>
       </form>
-      {/* Render Navigate component if loggedIn state is true */}
+
       {loggedIn && <Navigate to="/dashboard" />}
     </div>
   );

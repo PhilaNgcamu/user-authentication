@@ -19,23 +19,21 @@ const RegisterForm = () => {
       });
       const data = await response.json();
       if (response.ok) {
-        console.log(data); // Log the response from the server
-        // Reset the form fields after successful registration
+        console.log(data);
         setUsername("");
         setEmail("");
         setPassword("");
       } else {
-        setError(data.error); // Set error state with the error message from the server
+        setError(data.error);
       }
     } catch (error) {
       console.error("Error registering user:", error.message);
-      setError("Error registering user. Please try again."); // Set error state for general errors
+      setError("Error registering user. Please try again.");
     }
   };
 
   return (
     <div className="form-container">
-      {/* Apply CSS class for styling */}
       <h2>Register</h2>
       {error && <p className="error-message">{error}</p>}
       <form onSubmit={handleSubmit}>
