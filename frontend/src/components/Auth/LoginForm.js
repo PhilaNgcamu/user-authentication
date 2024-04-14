@@ -1,13 +1,12 @@
-// LoginForm.js
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate hook
+import { Navigate } from "react-router-dom"; // Import Navigate component
 import "./LoginForm.css";
 
 const LoginForm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate(); // Initialize useNavigate hook
+  const [loggedIn, setLoggedIn] = useState(false); // State to track login status
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,20 +18,17 @@ const LoginForm = () => {
         },
         body: JSON.stringify({ username, password }),
       });
+      const data = await response.json();
       if (response.ok) {
-        const data = await response.json();
         localStorage.setItem("token", data.token);
         console.log("Login successful");
-        // Redirect to Dashboard page after successful login
-        navigate("/dashboard");
+        setLoggedIn(true); // Set loggedIn state to true after successful login
       } else {
-        const errorMessage = await response.json();
-        console.error("Error logging in:", errorMessage.error);
-        setError(errorMessage.error);
+        setError(data.error);
       }
     } catch (error) {
       console.error("Error logging in:", error.message);
-      setError(error.message);
+      setError("Error logging in. Please try again.");
     }
   };
 
@@ -61,6 +57,8 @@ const LoginForm = () => {
         </div>
         <button type="submit">Login</button>
       </form>
+      {/* Render Navigate component if loggedIn state is true */}
+      {loggedIn && <Navigate to="/dashboard" />}
     </div>
   );
 };

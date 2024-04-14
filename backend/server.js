@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const authRoutes = require("./routes/authRoutes");
+const inappropriateWordsMiddleware = require("./middleware/InappropriateWordsMiddleware");
 
 const app = express();
 
@@ -14,6 +15,8 @@ mongoose
   )
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error("MongoDB connection error:", err));
+
+app.use("/api/register", inappropriateWordsMiddleware);
 
 app.use("/api", authRoutes); // Update route prefix to /api
 
