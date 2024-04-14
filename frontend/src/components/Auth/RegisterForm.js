@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./RegisterForm.css"; // Import CSS file for styling
+import "./RegisterForm.css";
 
 const RegisterForm = () => {
   const [username, setUsername] = useState("");
@@ -10,25 +10,23 @@ const RegisterForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("/api/register", {
+      const response = await fetch("http://localhost:5000/api/register", {
+        // Update URL to match backend route
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+
         body: JSON.stringify({ username, email, password }),
       });
-      if (response.ok) {
-        const data = await response.json();
-        console.log(data); // Log the response from the server
-        // Reset the form fields after successful registration
-        setUsername("");
-        setEmail("");
-        setPassword("");
-      } else {
-        const errorMessage = await response.text();
-        console.error("Error registering user:", errorMessage);
-        setError(errorMessage);
+      if (!response.ok) {
+        throw new Error("Failed to register user");
       }
+      const data = await response.json();
+      console.log(data);
+      setUsername("");
+      setEmail("");
+      setPassword("");
     } catch (error) {
       console.error("Error registering user:", error.message);
       setError(error.message);
@@ -37,8 +35,6 @@ const RegisterForm = () => {
 
   return (
     <div className="form-container">
-      {" "}
-      {/* Apply CSS class for styling */}
       <h2>Register</h2>
       {error && <p className="error-message">{error}</p>}
       <form onSubmit={handleSubmit}>

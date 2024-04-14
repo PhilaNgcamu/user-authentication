@@ -1,16 +1,15 @@
+// UserProfile.js
 import React, { useState, useEffect } from "react";
-import "./UserProfile.css"; // Import CSS file for styling
+import "./UserProfile.css";
 
 const UserProfile = () => {
   const [userData, setUserData] = useState(null);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    // Fetch user profile data
     const fetchUserProfile = async () => {
       try {
         const token = localStorage.getItem("token");
-        console.log("Token:", token);
         const response = await fetch("/api/profile", {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -22,11 +21,11 @@ const UserProfile = () => {
         } else {
           const errorMessage = await response.text();
           console.error("Error fetching user profile:", errorMessage);
-          setError(errorMessage);
+          setError("Error fetching user profile");
         }
       } catch (error) {
         console.error("Error fetching user profile:", error.message);
-        setError(error.message);
+        setError("Error fetching user profile");
       }
     };
 
@@ -35,8 +34,6 @@ const UserProfile = () => {
 
   return (
     <div className="profile-container">
-      {" "}
-      {/* Apply CSS class for styling */}
       <h2>User Profile</h2>
       {error && <p className="error-message">{error}</p>}
       {userData && (

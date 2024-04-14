@@ -1,5 +1,6 @@
+// LoginForm.js
 import React, { useState } from "react";
-import "./LoginForm.css"; // Import CSS file for styling
+import "./LoginForm.css";
 
 const LoginForm = () => {
   const [username, setUsername] = useState("");
@@ -9,7 +10,7 @@ const LoginForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("/api/login", {
+      const response = await fetch("http://localhost:5000/api/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -18,16 +19,12 @@ const LoginForm = () => {
       });
       if (response.ok) {
         const data = await response.json();
-        // Assuming the backend sends back a token upon successful login
-        const { token } = data;
-        // Store token in localStorage
-        localStorage.setItem("token", token);
-        // Redirect to profile page or perform any other action
+        localStorage.setItem("token", data.token);
         console.log("Login successful");
       } else {
-        const errorMessage = await response.text();
-        console.error("Error logging in:", errorMessage);
-        setError(errorMessage);
+        const errorMessage = await response.json();
+        console.error("Error logging in:", errorMessage.error);
+        setError(errorMessage.error);
       }
     } catch (error) {
       console.error("Error logging in:", error.message);
@@ -37,8 +34,6 @@ const LoginForm = () => {
 
   return (
     <div className="form-container">
-      {" "}
-      {/* Apply CSS class for styling */}
       <h2>Login</h2>
       {error && <p className="error-message">{error}</p>}
       <form onSubmit={handleSubmit}>
