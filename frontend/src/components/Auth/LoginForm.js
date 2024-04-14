@@ -1,11 +1,13 @@
 // LoginForm.js
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate hook
 import "./LoginForm.css";
 
 const LoginForm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate(); // Initialize useNavigate hook
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,6 +23,8 @@ const LoginForm = () => {
         const data = await response.json();
         localStorage.setItem("token", data.token);
         console.log("Login successful");
+        // Redirect to Dashboard page after successful login
+        navigate("/dashboard");
       } else {
         const errorMessage = await response.json();
         console.error("Error logging in:", errorMessage.error);
